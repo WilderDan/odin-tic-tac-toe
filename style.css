@@ -38,3 +38,11 @@ body {
   font-size: 1.25rem;
   padding: 0.5rem;
 }
+
+.winningCell {
+  background-color: #39ff14;
+}
+
+.tieCell {
+  background-color: #ff3131;
+}

@@ -14,50 +14,68 @@
     const playerOne = "X";
     const playerTwo = "O";
 
+    let gameOver = false;
     let winner = null;
+    let winningLine = null;
     let currentPlayer = playerOne;
 
     function switchPlayers() {
       currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
     }
 
-    function checkForWinner() {
+    function checkForGameOver() {
       for (line of lines) {
         if (
           board[line[0]] !== "" &&
           board[line[0]] === board[line[1]] &&
           board[line[1]] === board[line[2]]
         ) {
+          gameOver = true;
           winner = board[line[0]];
+          winningLine = line;
           return;
         }
       }
 
-      if (!board.includes("")) winner = "tie";
+      if (!board.includes("")) gameOver = true;
     }
 
     const getBoard = () => board;
 
     const getCurrentPlayer = () => currentPlayer;
 
+    const isGameOver = () => gameOver;
+
     const getWinner = () => winner;
 
+    const getWinningLine = () => winningLine;
+
     const selectCell = (index) => {
-      if (board[index] !== "" || winner !== null) return;
+      if (board[index] !== "" || gameOver) return;
 
       board[index] = currentPlayer;
-      checkForWinner();
+      checkForGameOver();
 
       switchPlayers();
     };
 
     const reset = () => {
       board.fill("");
+      gameOver = false;
       winner = null;
+      winningLine = null;
       currentPlayer = playerOne;
     };
 
-    return { getBoard, getCurrentPlayer, getWinner, selectCell, reset };
+    return {
+      getBoard,
+      getCurrentPlayer,
+      isGameOver,
+      getWinner,
+      getWinningLine,
+      selectCell,
+      reset,
+    };
   })();
 
   // DOM cache
@@ -81,12 +99,21 @@
       (cell, index) => (cell.innerHTML = Game.getBoard()[index])
     );
 
-    const winner = Game.getWinner();
-    const message =
-      winner === null
-        ? `${Game.getCurrentPlayer()}'s turn.`
-        : getGameOverMessage(winner);
+    const isGameOver = Game.isGameOver();
 
+    const message = isGameOver
+      ? getGameOverMessage(Game.getWinner())
+      : `${Game.getCurrentPlayer()}'s turn.`;
+
+    if (isGameOver) {
+      if (Game.getWinner() !== null) {
+        for (index of Game.getWinningLine()) {
+          gameBoardCellElems[index].classList.add("winningCell");
+        }
+      } else {
+        gameBoardCellElems.forEach((cell) => cell.classList.add("tieCell"));
+      }
+    }
     gameMessage.innerText = message;
   }
 
@@ -98,11 +125,15 @@
 
   function clearGameBoard(e) {
     Game.reset();
+    gameBoardCellElems.forEach((cell) => {
+      cell.classList.remove("winningCell");
+      cell.classList.remove("tieCell");
+    });
     render();
   }
 
   function getGameOverMessage(winner) {
-    return winner === "tie" ? "Tie!" : `${winner} wins!`;
+    return winner ? `${winner} wins!` : "Tie!";
   }
 
   render();
