@@ -1,8 +1,22 @@
 (function App() {
   const Game = (function () {
     const board = new Array(9).fill("");
+    const playerOne = "X";
+    const playerTwo = "O";
+
+    let currentPlayer = playerOne;
+    function switchPlayers() {
+      currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+    }
+
     const getBoard = () => board;
-    const selectCell = (index) => (board[index] = "X");
+
+    const selectCell = (index) => {
+      if (board[index] !== "") return;
+      board[index] = currentPlayer;
+      switchPlayers();
+    };
+
     return { getBoard, selectCell };
   })();
 
