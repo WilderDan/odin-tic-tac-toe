@@ -17,7 +17,11 @@
       switchPlayers();
     };
 
-    return { getBoard, selectCell };
+    const resetBoard = () => {
+      board.fill("");
+    };
+
+    return { getBoard, selectCell, resetBoard };
   })();
 
   // DOM cache
@@ -25,10 +29,14 @@
     document.getElementsByClassName("gameBoard__cell")
   );
 
+  const resetBtn = document.getElementById("resetBtn");
+
   // Event Binding
   gameBoardCellElems.forEach((cell) =>
-    cell.addEventListener("click", handleClick)
+    cell.addEventListener("click", selectCell)
   );
+
+  resetBtn.addEventListener("click", clearGameBoard);
 
   // Render
   function render() {
@@ -38,9 +46,13 @@
   }
 
   // Other Functions
-  function handleClick(e) {
-    const index = e.target.dataset.index;
-    Game.selectCell(index);
+  function selectCell(e) {
+    Game.selectCell(e.target.dataset.index);
+    render();
+  }
+
+  function clearGameBoard(e) {
+    Game.resetBoard();
     render();
   }
 
