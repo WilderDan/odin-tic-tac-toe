@@ -21,7 +21,30 @@
     <header>
       <h1>Tic Tac Toe</h1>
     </header>
-    <main>
+
+    <dialog id="newGameDialog">
+      <form id="form" class="dialog__form">
+        <div class="closeContainer">
+          <img id="dialog__close" src="./icons/X.svg" alt="close" />
+        </div>
+        <div class="formMain">
+          <h2 id="newGameHeader">New Game</h2>
+
+          <div class="form__inputs">
+            <div class="aiControlContainer">
+              <p>AI <span id="aiState"></span></p>
+              <input type="checkbox" id="aiSwitch" />
+              <label for="aiSwitch"></label>
+            </div>
+          </div>
+
+          <button id="resetBtn" type="submit">START</button>
+        </div>
+      </form>
+    </dialog>
+    <main id="main">
+      <button id="newGameBtn" type="submit">NEW GAME</button>
+      <p id="gameMessage"></p>
       <div id="gameBoard">
         <div class="gameBoard__cell hoverEnabled" data-index="0"></div>
         <div class="gameBoard__cell hoverEnabled" data-index="1"></div>
@@ -33,16 +56,6 @@
         <div class="gameBoard__cell hoverEnabled" data-index="7"></div>
         <div class="gameBoard__cell hoverEnabled" data-index="8"></div>
       </div>
-
-      <aside>
-        <p id="gameMessage"></p>
-        <div class="aiControlContainer">
-          <p>AI <span id="aiState"></span></p>
-          <input type="checkbox" id="aiSwitch" />
-          <label for="aiSwitch"></label>
-        </div>
-        <button id="resetBtn">New Game</button>
-      </aside>
     </main>
   </body>
 </html>

@@ -24,19 +24,18 @@ header {
   border-bottom: 2px solid black;
 }
 
+#newGameHeader {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+
 main {
   width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-}
-
-aside {
-  display: flex;
   flex-direction: column;
-  gap: 1rem;
-  text-align: center;
-  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 #gameMessage {
@@ -51,6 +50,7 @@ aside {
     "7 8 9";
   grid-template-rows: repeat(3, var(--cellSize));
   grid-template-columns: repeat(3, var(--cellSize));
+  margin-bottom: 2rem;
 }
 
 .gameBoard__cell {
@@ -95,13 +95,17 @@ aside {
   border-right: 0;
 }
 
-#resetBtn {
+.cellMarker {
+  width: 75%;
+}
+
+button {
   font-size: 1.1rem;
   padding: 0.5rem 1rem;
   background-color: #00a9ff;
-  border: 1 px solid black;
+  border: 1px solid black;
   border-radius: 25px;
-  box-shadow: 4px 4px;
+  box-shadow: 4px 4px black;
   font-weight: bold;
   cursor: pointer;
 }
@@ -130,8 +134,8 @@ input[type="checkbox"] {
 
 label {
   cursor: pointer;
-  width: 80px;
-  height: 40px;
+  width: 60px;
+  height: 25px;
   background: black;
   display: block;
   border-radius: 100px;
@@ -141,10 +145,10 @@ label {
 label:after {
   content: "";
   position: absolute;
-  top: 7px;
+  top: 6px;
   left: 5px;
-  width: 25px;
-  height: 25px;
+  width: 13px;
+  height: 13px;
   background: #a0e9ff;
   border-radius: 100px;
   transition: 0.25s;
@@ -160,5 +164,51 @@ input:checked + label:after {
 }
 
 label:active:after {
-  width: 40px;
+  width: 26px;
+}
+
+#newGameDialog {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid black;
+  border-radius: var(--borderRadius);
+  padding: 4vh 2vw;
+  width: clamp(200px, 75vw, 400px);
+  height: clamp(400px, 75vh, 800px);
+
+  background-color: #cdf5fd;
+}
+
+.dialog__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.formMain {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  height: 100%;
+}
+
+.closeContainer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dialog__form__header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+#dialog__close:hover {
+  cursor: pointer;
 }

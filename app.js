@@ -79,6 +79,11 @@
   })();
 
   // DOM cache
+  const newGameBtn = document.getElementById("newGameBtn");
+  const newGameDialog = document.getElementById("newGameDialog");
+  const dialogClose = document.getElementById("dialog__close");
+  const main = document.getElementById("main");
+
   const gameBoardCellElems = Array.from(
     document.getElementsByClassName("gameBoard__cell")
   );
@@ -89,20 +94,29 @@
   const aiSwitch = document.getElementById("aiSwitch");
 
   // Event Binding
+  window.addEventListener("submit", startNewGame);
+  newGameDialog.addEventListener("keydown", escapeKeyMod);
+
   gameBoardCellElems.forEach((cell) =>
     cell.addEventListener("click", selectCell)
   );
+  newGameBtn.addEventListener("click", openNewGameDialog);
 
-  resetBtn.addEventListener("click", clearGameBoard);
   aiSwitch.addEventListener("click", aiToggle);
+  dialogClose.addEventListener("click", closeDialog);
 
   // Render
   function render() {
     aiState.innerText = aiSwitch.checked ? "ON" : "OFF";
 
     gameBoardCellElems.forEach((cell, index) => {
-      let marker = Game.getBoard()[index];
-      cell.innerText = marker;
+      let marker = Game.getBoard()[index].toUpperCase();
+
+      cell.innerHTML =
+        marker === ""
+          ? ""
+          : `<img class="cellMarker" src="./icons/${marker}.svg" alt="${marker}" />`;
+
       if (marker !== "") {
         cell.classList.remove("hoverEnabled");
       }
@@ -131,18 +145,27 @@
   }
 
   // Other Functions
+  function openNewGameDialog(e) {
+    newGameDialog.showModal();
+    main.style.display = "none";
+  }
+
   function selectCell(e) {
     Game.selectCell(e.target.dataset.index);
     render();
   }
 
-  function clearGameBoard(e) {
+  function startNewGame(e) {
+    e.preventDefault();
+
     Game.reset();
     gameBoardCellElems.forEach((cell) => {
       cell.classList.remove("winningCell");
       cell.classList.remove("tieCell");
       cell.classList.add("hoverEnabled");
     });
+
+    closeDialog(null);
     render();
   }
 
@@ -154,5 +177,17 @@
     render();
   }
 
+  function closeDialog(e) {
+    newGameDialog.close();
+    main.style.display = "flex";
+  }
+
+  function escapeKeyMod(e) {
+    if (e.code === "Escape") {
+      closeDialog(null);
+    }
+  }
+
+  openNewGameDialog(null);
   render();
 })();
