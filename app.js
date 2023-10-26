@@ -1,5 +1,5 @@
 (function App() {
-  const Game = (function () {
+  function buildGame(playerOneStrategy, playerTwoStrategy) {
     const board = new Array(9).fill("");
     const lines = [
       [0, 1, 2],
@@ -11,6 +11,9 @@
       [0, 4, 8],
       [2, 4, 6],
     ];
+    // Strategy functions. 0 index for player selection
+    const strategies = [null];
+
     const playerOne = "X";
     const playerTwo = "O";
 
@@ -18,6 +21,10 @@
     let winner = null;
     let winningLine = null;
     let currentPlayer = playerOne;
+
+    function start() {
+      // nothing to do if both are human
+    }
 
     function switchPlayers() {
       currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
@@ -74,9 +81,14 @@
       getWinner,
       getWinningLine,
       selectCell,
+      start,
       reset,
     };
-  })();
+  }
+
+  function playerController({}) {}
+
+  let game;
 
   // DOM cache
   const newGameBtn = document.getElementById("newGameBtn");
@@ -103,14 +115,14 @@
   newGameBtn.addEventListener("click", openNewGameDialog);
 
   aiSwitch.addEventListener("click", aiToggle);
-  dialogClose.addEventListener("click", closeDialog);
+  dialogClose.addEventListener("click", closeNewGameDialog);
 
   // Render
   function render() {
     aiState.innerText = aiSwitch.checked ? "ON" : "OFF";
 
     gameBoardCellElems.forEach((cell, index) => {
-      let marker = Game.getBoard()[index].toUpperCase();
+      let marker = game.getBoard()[index].toUpperCase();
 
       cell.innerHTML =
         marker === ""
@@ -122,19 +134,19 @@
       }
     });
 
-    const isGameOver = Game.isGameOver();
+    const isGameOver = game.isGameOver();
 
     const message = isGameOver
-      ? getGameOverMessage(Game.getWinner())
-      : `${Game.getCurrentPlayer()}'s turn.`;
+      ? getGameOverMessage(game.getWinner())
+      : `${game.getCurrentPlayer()}'s turn.`;
 
     if (isGameOver) {
       gameBoardCellElems.forEach((cell) =>
         cell.classList.remove("hoverEnabled")
       );
 
-      if (Game.getWinner() !== null) {
-        for (index of Game.getWinningLine()) {
+      if (game.getWinner() !== null) {
+        for (index of game.getWinningLine()) {
           gameBoardCellElems[index].classList.add("winningCell");
         }
       } else {
@@ -151,21 +163,23 @@
   }
 
   function selectCell(e) {
-    Game.selectCell(e.target.dataset.index);
+    game.selectCell(e.target.dataset.index);
     render();
   }
 
   function startNewGame(e) {
     e.preventDefault();
+    closeNewGameDialog(null);
 
-    Game.reset();
+    game = buildGame(0, 0);
+
     gameBoardCellElems.forEach((cell) => {
       cell.classList.remove("winningCell");
       cell.classList.remove("tieCell");
       cell.classList.add("hoverEnabled");
     });
 
-    closeDialog(null);
+    game.start();
     render();
   }
 
@@ -177,17 +191,21 @@
     render();
   }
 
-  function closeDialog(e) {
+  function closeNewGameDialog(e) {
     newGameDialog.close();
     main.style.display = "flex";
+
+    if (!game) {
+      game = buildGame(0, 0);
+      game.start();
+    }
   }
 
   function escapeKeyMod(e) {
     if (e.code === "Escape") {
-      closeDialog(null);
+      closeNewGameDialog(null);
     }
   }
 
   openNewGameDialog(null);
-  render();
 })();
