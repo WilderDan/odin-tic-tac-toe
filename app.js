@@ -85,6 +85,8 @@
 
   const gameMessage = document.getElementById("gameMessage");
   const resetBtn = document.getElementById("resetBtn");
+  const aiState = document.getElementById("aiState");
+  const aiSwitch = document.getElementById("aiSwitch");
 
   // Event Binding
   gameBoardCellElems.forEach((cell) =>
@@ -92,9 +94,12 @@
   );
 
   resetBtn.addEventListener("click", clearGameBoard);
+  aiSwitch.addEventListener("click", aiToggle);
 
   // Render
   function render() {
+    aiState.innerText = aiSwitch.checked ? "ON" : "OFF";
+
     gameBoardCellElems.forEach((cell, index) => {
       let marker = Game.getBoard()[index];
       cell.innerText = marker;
@@ -143,6 +148,10 @@
 
   function getGameOverMessage(winner) {
     return winner ? `${winner} wins!` : "Tie!";
+  }
+
+  function aiToggle(e) {
+    render();
   }
 
   render();

@@ -36,6 +36,11 @@ aside {
   flex-direction: column;
   gap: 1rem;
   text-align: center;
+  justify-content: space-between;
+}
+
+#gameMessage {
+  font-weight: bold;
 }
 
 #gameBoard {
@@ -54,6 +59,7 @@ aside {
   align-items: center;
   font-size: 2rem;
   border: 1px solid black;
+  font-weight: bold;
 }
 
 .hoverEnabled:hover {
@@ -97,6 +103,7 @@ aside {
   border-radius: 25px;
   box-shadow: 4px 4px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .winningCell {
@@ -105,4 +112,53 @@ aside {
 
 .tieCell {
   background-color: #ff3131;
+}
+
+.aiControlContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+label {
+  cursor: pointer;
+  width: 80px;
+  height: 40px;
+  background: black;
+  display: block;
+  border-radius: 100px;
+  position: relative;
+}
+
+label:after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 5px;
+  width: 25px;
+  height: 25px;
+  background: #a0e9ff;
+  border-radius: 100px;
+  transition: 0.25s;
+}
+
+input:checked + label {
+  background: #00a9ff;
+}
+
+input:checked + label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+label:active:after {
+  width: 40px;
 }
