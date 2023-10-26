@@ -95,9 +95,13 @@
 
   // Render
   function render() {
-    gameBoardCellElems.forEach(
-      (cell, index) => (cell.innerHTML = Game.getBoard()[index])
-    );
+    gameBoardCellElems.forEach((cell, index) => {
+      let marker = Game.getBoard()[index];
+      cell.innerText = marker;
+      if (marker !== "") {
+        cell.classList.remove("hoverEnabled");
+      }
+    });
 
     const isGameOver = Game.isGameOver();
 
@@ -106,6 +110,10 @@
       : `${Game.getCurrentPlayer()}'s turn.`;
 
     if (isGameOver) {
+      gameBoardCellElems.forEach((cell) =>
+        cell.classList.remove("hoverEnabled")
+      );
+
       if (Game.getWinner() !== null) {
         for (index of Game.getWinningLine()) {
           gameBoardCellElems[index].classList.add("winningCell");
@@ -128,6 +136,7 @@
     gameBoardCellElems.forEach((cell) => {
       cell.classList.remove("winningCell");
       cell.classList.remove("tieCell");
+      cell.classList.add("hoverEnabled");
     });
     render();
   }
