@@ -32,14 +32,32 @@
 
           <div class="form__inputs">
             <div class="aiControlContainer">
-              <p>Player 1 AI</p>
-              <input type="checkbox" id="aiSwitchX" />
-              <label for="aiSwitchX"></label>
+              <div class="playerToggle">
+                <p>Player 1</p>
+                <input type="checkbox" id="aiSwitchX" />
+                <label for="aiSwitchX"></label>
+              </div>
+              <div id="aiStrategyX" class="aiStrategy">
+                <p>AI Strategy:</p>
+                <select id="strategyX">
+                  <option value="1">Random</option>
+                  <option value="2">First Available</option>
+                </select>
+              </div>
             </div>
             <div class="aiControlContainer">
-              <p>Player 2 AI</p>
-              <input type="checkbox" id="aiSwitchO" checked />
-              <label for="aiSwitchO"></label>
+              <div class="playerToggle">
+                <p>Player 2</p>
+                <input type="checkbox" id="aiSwitchO" checked />
+                <label for="aiSwitchO"></label>
+              </div>
+              <div id="aiStrategyO" class="aiStrategy">
+                <p>AI Strategy:</p>
+                <select id="strategyO">
+                  <option value="1">Random</option>
+                  <option value="2">First Available</option>
+                </select>
+              </div>
             </div>
           </div>
 

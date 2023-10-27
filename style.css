@@ -122,11 +122,20 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
   font-weight: bold;
 }
 
+.playerToggle,
+.aiStrategy {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 0.5rem;
+}
+
 input[type="checkbox"] {
+  position: absolute;
   height: 0;
   width: 0;
   visibility: hidden;
@@ -217,4 +226,9 @@ label:active:after {
 .form__inputs {
   display: flex;
   gap: 3rem;
+}
+
+select {
+  border-radius: 25px;
+  text-align: center;
 }

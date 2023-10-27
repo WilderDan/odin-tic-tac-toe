@@ -13,7 +13,7 @@
     ];
 
     // Strategy functions. 0 index for player selection
-    const strategies = [null, randomSelection];
+    const strategies = [null, randomSelection, firstAvailable];
 
     const AI_DELAY = 600;
     let lockSelection = false;
@@ -53,15 +53,27 @@
       if (!board.includes("")) gameOver = true;
     }
 
-    function randomSelection() {
+    function getEmptyCells() {
       let emptyCells = [];
 
       board.forEach((cell, index) => {
         if (cell === "") emptyCells.push(index);
       });
 
+      return emptyCells;
+    }
+
+    function randomSelection() {
+      let emptyCells = getEmptyCells();
+
       const selection = Math.floor(Math.random() * emptyCells.length);
       return emptyCells[selection];
+    }
+
+    function firstAvailable() {
+      let emptyCells = getEmptyCells();
+
+      return emptyCells[0];
     }
 
     const start = (callback) => {
@@ -136,21 +148,30 @@
   const gameMessage = document.getElementById("gameMessage");
   const resetBtn = document.getElementById("resetBtn");
   const aiSwitchX = document.getElementById("aiSwitchX");
+  const aiStrategyXElem = document.getElementById("aiStrategyX");
   const aiSwitchO = document.getElementById("aiSwitchO");
+  const aiStrategyOElem = document.getElementById("aiStrategyO");
+  const strategyX = document.getElementById("strategyX");
+  const strategyO = document.getElementById("strategyO");
 
   // Event Binding
   window.addEventListener("submit", startNewGame);
-  newGameDialog.addEventListener("keydown", escapeKeyMod);
-
+  window.addEventListener("keydown", escapeKeyMod);
   gameBoardCellElems.forEach((cell) =>
     cell.addEventListener("click", selectCell)
   );
   newGameBtn.addEventListener("click", openNewGameDialog);
-
   dialogClose.addEventListener("click", closeNewGameDialog);
+  aiSwitchX.addEventListener("click", render);
+  aiSwitchO.addEventListener("click", render);
 
   // Render
   function render() {
+    aiStrategyXElem.style.visibility = aiSwitchX.checked ? "visible" : "hidden";
+    aiStrategyOElem.style.visibility = aiSwitchO.checked ? "visible" : "hidden";
+
+    if (!game) return;
+
     gameBoardCellElems.forEach((cell, index) => {
       let marker = game.getBoard()[index].toUpperCase();
 
@@ -189,7 +210,8 @@
   // Other Functions
   function openNewGameDialog(e) {
     newGameDialog.showModal();
-    main.style.display = "none";
+    main.style.visibility = "hidden";
+    render();
   }
 
   function selectCell(e) {
@@ -201,8 +223,8 @@
     e.preventDefault();
     closeNewGameDialog(null);
 
-    const playerOne = aiSwitchX.checked ? 1 : 0;
-    const playerTwo = aiSwitchO.checked ? 1 : 0;
+    const playerOne = aiSwitchX.checked ? strategyX.value : 0;
+    const playerTwo = aiSwitchO.checked ? strategyO.value : 0;
     game = buildGame(playerOne, playerTwo);
 
     gameBoardCellElems.forEach((cell) => {
@@ -220,8 +242,8 @@
   }
 
   function closeNewGameDialog(e) {
+    main.style.visibility = "visible";
     newGameDialog.close();
-    main.style.display = "flex";
 
     if (!game) {
       game = buildGame(0, 1);
