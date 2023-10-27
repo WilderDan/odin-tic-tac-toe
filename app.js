@@ -121,8 +121,6 @@
     };
   }
 
-  function playerController({}) {}
-
   let game;
 
   // DOM cache
@@ -137,8 +135,8 @@
 
   const gameMessage = document.getElementById("gameMessage");
   const resetBtn = document.getElementById("resetBtn");
-  const aiState = document.getElementById("aiState");
-  const aiSwitch = document.getElementById("aiSwitch");
+  const aiSwitchX = document.getElementById("aiSwitchX");
+  const aiSwitchO = document.getElementById("aiSwitchO");
 
   // Event Binding
   window.addEventListener("submit", startNewGame);
@@ -149,13 +147,10 @@
   );
   newGameBtn.addEventListener("click", openNewGameDialog);
 
-  aiSwitch.addEventListener("click", aiToggle);
   dialogClose.addEventListener("click", closeNewGameDialog);
 
   // Render
   function render() {
-    aiState.innerText = aiSwitch.checked ? "ON" : "OFF";
-
     gameBoardCellElems.forEach((cell, index) => {
       let marker = game.getBoard()[index].toUpperCase();
 
@@ -206,7 +201,9 @@
     e.preventDefault();
     closeNewGameDialog(null);
 
-    game = buildGame(0, 1);
+    const playerOne = aiSwitchX.checked ? 1 : 0;
+    const playerTwo = aiSwitchO.checked ? 1 : 0;
+    game = buildGame(playerOne, playerTwo);
 
     gameBoardCellElems.forEach((cell) => {
       cell.classList.remove("winningCell");
@@ -220,10 +217,6 @@
 
   function getGameOverMessage(winner) {
     return winner ? `${winner} wins!` : "Tie!";
-  }
-
-  function aiToggle(e) {
-    render();
   }
 
   function closeNewGameDialog(e) {
