@@ -11,8 +11,13 @@
       [0, 4, 8],
       [2, 4, 6],
     ];
+
     // Strategy functions. 0 index for player selection
-    const strategies = [null];
+    const strategies = [null, randomSelection];
+
+    const AI_DELAY = 600;
+    let lockSelection = false;
+    let notifySelection;
 
     const playerOne = "X";
     const playerTwo = "O";
@@ -22,12 +27,13 @@
     let winningLine = null;
     let currentPlayer = playerOne;
 
-    function start() {
-      // nothing to do if both are human
-    }
-
     function switchPlayers() {
       currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+
+      if (currentPlayer === playerOne && playerOneStrategy !== 0)
+        aiSelection(playerOneStrategy);
+      else if (currentPlayer === playerTwo && playerTwoStrategy !== 0)
+        aiSelection(playerTwoStrategy);
     }
 
     function checkForGameOver() {
@@ -47,6 +53,36 @@
       if (!board.includes("")) gameOver = true;
     }
 
+    function randomSelection() {
+      let emptyCells = [];
+
+      board.forEach((cell, index) => {
+        if (cell === "") emptyCells.push(index);
+      });
+
+      const selection = Math.floor(Math.random() * emptyCells.length);
+      return emptyCells[selection];
+    }
+
+    const start = (callback) => {
+      notifySelection = callback;
+
+      if (playerOneStrategy !== 0) {
+        aiSelection(playerOneStrategy);
+      }
+    };
+
+    function aiSelection(strategy) {
+      lockSelection = true;
+
+      setTimeout(() => {
+        const selection = strategies[strategy]();
+        lockSelection = false;
+        selectCell(selection);
+        notifySelection();
+      }, AI_DELAY);
+    }
+
     const getBoard = () => board;
 
     const getCurrentPlayer = () => currentPlayer;
@@ -58,11 +94,10 @@
     const getWinningLine = () => winningLine;
 
     const selectCell = (index) => {
-      if (board[index] !== "" || gameOver) return;
+      if (board[index] !== "" || gameOver || lockSelection) return;
 
       board[index] = currentPlayer;
       checkForGameOver();
-
       switchPlayers();
     };
 
@@ -171,7 +206,7 @@
     e.preventDefault();
     closeNewGameDialog(null);
 
-    game = buildGame(0, 0);
+    game = buildGame(0, 1);
 
     gameBoardCellElems.forEach((cell) => {
       cell.classList.remove("winningCell");
@@ -179,7 +214,7 @@
       cell.classList.add("hoverEnabled");
     });
 
-    game.start();
+    game.start(render);
     render();
   }
 
@@ -196,9 +231,10 @@
     main.style.display = "flex";
 
     if (!game) {
-      game = buildGame(0, 0);
-      game.start();
+      game = buildGame(0, 1);
+      game.start(render);
     }
+    render();
   }
 
   function escapeKeyMod(e) {
